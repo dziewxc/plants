@@ -1,0 +1,7 @@
+cloudy_crud:
+    resource: "@CloudyCrudBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: @AppBundle/Controller/
+    type:     annotation
