@@ -4,4 +4,6 @@
 {% block body %}
     <h1>Hi {{ name }}! Welcome to Symfony!</h1>
     <h2>It's {{ day }}!</h2>
+	{{ app.request.query.get('foo') }}
+	{{ app.request.request.get('foo') }}
 {% endblock %}
