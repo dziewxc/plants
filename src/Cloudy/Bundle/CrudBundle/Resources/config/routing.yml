@@ -1,0 +1,6 @@
+# src/Cloudy/Bundle/CrudBundle/Resources/config/routing.yml
+CloudyCrudBundle_homepage:
+    pattern:  /
+    defaults: { _controller: CloudyCrudBundle:Page:index }
+    requirements:
+        _method:  GET
