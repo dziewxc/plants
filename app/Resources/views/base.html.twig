@@ -22,17 +22,17 @@
                     {% block navigation %}
                         <nav>
                             <ul class="navigation">
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">About</a></li>
-                                <li><a href="#">Contact</a></li>
+                                <li><a href="{{ path('CloudyCrudBundle_homepage') }}">Home</a></li>
+                                <li><a href="{{ path('CloudyCrudBundle_about') }}">About</a></li>
+                                <li><a href="{{ path('CloudyCrudBundle_contact') }}">Contact</a></li>
                             </ul>
                         </nav>
                     {% endblock %}
                 </div>
 
                 <hgroup>
-                    <h2>{% block blog_title %}<a href="#">Cloudyblog</a>{% endblock %}</h2>
-                    <h3>{% block blog_tagline %}<a href="#">Profesjonalne artykuły</a>{% endblock %}</h3>
+                    <h2>{% block blog_title %}<a href="{{ path('CloudyCrudBundle_homepage') }}">Cloudyblog</a>{% endblock %}</h2>
+                    <h3>{% block blog_tagline %}<a href="{{ path('CloudyCrudBundle_homepage') }}">Profesjonalne artykuły</a>{% endblock %}</h3>
                 </hgroup>
             </header>
 

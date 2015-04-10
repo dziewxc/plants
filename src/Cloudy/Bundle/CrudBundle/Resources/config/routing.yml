@@ -4,3 +4,15 @@ CloudyCrudBundle_homepage:
     defaults: { _controller: CloudyCrudBundle:Page:index }
     requirements:
         _method:  GET
+        
+CloudyCrudBundle_about:
+    pattern:  /about
+    defaults: { _controller: CloudyCrudBundle:Page:about }
+    requirements:
+        _method:  GET
+        
+CloudyCrudBundle_contact:
+    pattern:  /contact
+    defaults: { _controller: CloudyCrudBundle:Page:contact }
+    requirements:
+        _method:  GET

@@ -1,6 +1,6 @@
 cloudy_crud:
     resource: "@CloudyCrudBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /cloudy/
 
 app:
     resource: @AppBundle/Controller/
