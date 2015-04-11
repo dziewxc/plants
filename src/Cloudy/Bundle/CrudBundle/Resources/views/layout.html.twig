@@ -1,5 +1,10 @@
-{# src/Cloudy/Bundle/CrudBundle/Resources/views/layout.html.twig #}
+{# src/Blogger/BlogBundle/Resources/views/layout.html.twig #}
 {% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/cloudy/public/css/blog.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
 
 {% block sidebar %}
     Sidebar content
