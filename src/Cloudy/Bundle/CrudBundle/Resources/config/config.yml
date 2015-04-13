@@ -1,0 +1,4 @@
+# src/Cloudy/Bundle/CrudBundle/Resources/config/config.yml
+parameters:
+    # Blogger contact email address
+    cloudy_crud.emails.contact_email: aa.pietruczuk@gmail.com

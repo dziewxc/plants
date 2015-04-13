@@ -16,3 +16,9 @@ CloudyCrudBundle_contact:
     defaults: { _controller: CloudyCrudBundle:Page:contact }
     requirements:
         _method:  GET|POST
+
+CloudyCrudBundle_plantscalculator:
+    pattern:  /plantscalculator
+    defaults: { _controller: CloudyCrudBundle:Page:plantsCalculator }
+    requirements:
+        _method:  GET|POST
