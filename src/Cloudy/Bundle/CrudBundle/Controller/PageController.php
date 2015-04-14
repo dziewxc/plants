@@ -5,7 +5,9 @@ namespace Cloudy\Bundle\CrudBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Cloudy\Bundle\CrudBundle\Entity\Enquiry;
+use Cloudy\Bundle\CrudBundle\Entity\UserData;
 use Cloudy\Bundle\CrudBundle\Form\EnquiryType;
+use Symfony\Component\HttpFoundation\Request;
 
 class PageController extends Controller
 {
@@ -21,7 +23,7 @@ class PageController extends Controller
 	
 	public function contactAction()
 	{
-		$enquiry = new Enquiry(); 
+		$enquiry = new Enquiry();
 		$form = $this->createForm(new EnquiryType(), $enquiry);
 
 		$request = $this->getRequest();
@@ -51,8 +53,38 @@ class PageController extends Controller
 		));
 	}
 	
-	public function plantsCalculatorAction() 
+	public function plantsCalculatorAction(Request $request) 
 	{
-		return $this->render('CloudyCrudBundle:Page:plantscalculator.html.twig');
+		$userdata = new UserData;
+		$userdata->setFlatSurface(200);
+		$userdata->setIfSmokers(true);
+		$userdata->setOccupantsCount(10);
+		$userdata->setElectronicsLevel(5);
+		
+		$form = $this->createFormBuilder($userdata)
+			->add('flatSurface', 'integer')
+			->add('ifSmokers', 'checkbox')
+			->add('OccupantsCount', 'integer')
+			->add('ElectronicsLevel', 'integer')
+			->add('save', 'submit', array('label' => 'Add'))
+			->getForm();
+		
+		return $this->render('CloudyCrudBundle:Page:plantscalculator.html.twig', array(
+			'form' =>$form->createView()
+		));
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

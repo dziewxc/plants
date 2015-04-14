@@ -4,8 +4,6 @@
 namespace Cloudy\Bundle\CrudBundle\Entity;
 
 use Symfony\Component\Validator\Mapping\ClassMetadata;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Enquiry
@@ -17,11 +15,11 @@ class Enquiry
 	
 	public static function loadValidatorMetadata(ClassMetadata $metadata)
     {
-        $metadata->addPropertyConstraint('name', new NotBlank());
+        $metadata->addPropertyConstraint('name', new Assert\NotBlank());
 
-        $metadata->addPropertyConstraint('email', new Email());
+        $metadata->addPropertyConstraint('email', new Assert\Email());
 
-        $metadata->addPropertyConstraint('subject', new NotBlank());
+        $metadata->addPropertyConstraint('subject', new Assert\NotBlank());
         $metadata->addPropertyConstraint('body', new Assert\Length(array(
 			'min' => 5,
 			'max' => 50,
