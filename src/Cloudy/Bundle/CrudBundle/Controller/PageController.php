@@ -53,25 +53,35 @@ class PageController extends Controller
 		));
 	}
 	
-	public function plantsCalculatorAction(Request $request) 
+	public function plantsCalculatorAction(Request $request)
 	{
-		$userdata = new UserData;
-		$userdata->setFlatSurface(200);
-		$userdata->setIfSmokers(true);
-		$userdata->setOccupantsCount(10);
-		$userdata->setElectronicsLevel(5);
+		$userdata = new UserData();
 		
 		$form = $this->createFormBuilder($userdata)
 			->add('flatSurface', 'integer')
-			->add('ifSmokers', 'checkbox')
-			->add('OccupantsCount', 'integer')
-			->add('ElectronicsLevel', 'integer')
-			->add('save', 'submit', array('label' => 'Add'))
+			->add('electronicsLevel', 'integer')
+			->add('next', 'submit', array('label' => 'next', 'validation_groups' => 'false'))
+			->add('occupantsCount', 'integer')
+			->add('ifSmokers', 'choice')
+			->add('save', 'submit', array('label' => 'save'))
 			->getForm();
+			
+		$form->handleRequest($request);
 		
-		return $this->render('CloudyCrudBundle:Page:plantscalculator.html.twig', array(
-			'form' =>$form->createView()
-		));
+		if($form->isValid())
+		{
+			$nextAction = $form->get('save')->isClicked()
+				? 'task'
+				: 'nottask';
+			
+			return $this->redirectToRoute('CloudyCrudBundle_plantscalculator');
+		}
+		
+		
+		
+		/*return $this->render('CloudyCrudBundle:Page:plantscalculator.html.twig', array(
+			'form' =>$form->createView() //'variable_name' => variable_value
+		));*/
 	}
 	
 	

@@ -5,9 +5,13 @@
 
 {% block body %}
     <header>
-        <h1>Calculate your plants!</h1>
+        <h1>You should paste you data below</h1>
     </header>
     <article>
-        <p>You need plants? Now you can calculate what you need exactly!</p>
+        <p>
+		{{ form_start(form) }}
+		{{ form_widget(form) }}
+		{{ form_end(form) }}
+		</p>
     </article>
 {% endblock %}
