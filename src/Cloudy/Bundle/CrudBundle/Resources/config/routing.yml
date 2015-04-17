@@ -22,3 +22,10 @@ CloudyCrudBundle_plantscalculator:
     defaults: { _controller: CloudyCrudBundle:Page:plantsCalculator }
     requirements:
         _method:  GET|POST
+
+CloudyCrudBundle_blog_show:
+    pattern:  /{id}
+    defaults: { _controller: CloudyCrudBundle:Blog:show }
+    requirements:
+        _method:  GET
+        id: \d+
