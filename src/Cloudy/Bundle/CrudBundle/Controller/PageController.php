@@ -8,6 +8,9 @@ use Cloudy\Bundle\CrudBundle\Entity\Enquiry;
 use Cloudy\Bundle\CrudBundle\Entity\UserData;
 use Cloudy\Bundle\CrudBundle\Form\EnquiryType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\Event;
+use Cloudy\Bundle\CrudBundle\Events;
 
 class PageController extends Controller
 {
@@ -25,6 +28,10 @@ class PageController extends Controller
 	{
 		$enquiry = new Enquiry();
 		$form = $this->createForm(new EnquiryType(), $enquiry);
+		$dispatcher = new EventDispatcher();
+		
+		$newevent = new \Cloudy\Bundle\CrudBundle\Events\MessageEvent;
+		$dispatcher->addListener('blog.contact', array($newevent, 'onBlogContact'));
 
 		$request = $this->getRequest();
 		if ($request->getMethod() == 'POST') {
@@ -37,7 +44,11 @@ class PageController extends Controller
 					->setTo($this->container->getParameter('cloudy_crud.emails.contact_email'))
 					->setBody($this->renderView('CloudyCrudBundle:Page:contactEmail.txt.twig', array('enquiry' => $enquiry)));
 				$this->get('mailer')->send($message);
-
+				
+				$event = new \Cloudy\Bundle\CrudBundle\Events\MessageEvent($message);
+				$dispatcher->dispatch('post.submit');
+				
+				
 				$this->get('session')->getFlashBag()->add('blogger-notice','Your contact enquiry was successfully sent. Thank you!');
 
 				// Redirect - This is important to prevent users re-posting
