@@ -7,3 +7,15 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+services:
+    submit.event:
+        class: Cloudy\Bundle\CrudBundle\EventListener\TestListener
+        tags:
+            - { name: event_listener, event: submit.event, method: onSubmitEvent }
+
+services:
+    pp.awesome_work.concrete_class_foo:
+        class: Cloudy\Bundle\CrudBundle\Controller\PageController
+        arguments:
+            - @event_dispatcher

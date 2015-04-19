@@ -2,3 +2,15 @@ services:
 #    cloudy_crud.example:
 #        class: Cloudy\Bundle\CrudBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
+
+services:
+    pp.awesome_work.page_controller:
+        class: Cloudy\Bundle\CrudBundle\Controller\PageController
+        arguments:
+            - @event_dispatcher
+
+services:
+    pp_awesome.awesome.listener:
+        class: Cloudy\Bundle\CrudBundle\EventListener\TestListener
+        tags:
+            - { name: kernel.event_listener, event: pp.awesome_work.before, method: onSubmitEvent }
