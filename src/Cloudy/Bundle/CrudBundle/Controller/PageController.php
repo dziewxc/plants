@@ -11,9 +11,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Cloudy\Bundle\CrudBundle\CloudyEvents;
 use Cloudy\Bundle\CrudBundle\Event\SubmitEvent;
+use Cloudy\Bundle\CrudBundle\EventListener\TestListener;
 
 class PageController extends Controller
 {
+	public $name;
+	
+	public function setName($name) 
+	{
+		$this->name = $name;
+	}
+	
     public function indexAction()
     {
         return $this->render('CloudyCrudBundle:Page:index.html.twig');
@@ -21,7 +29,7 @@ class PageController extends Controller
 
 	public function aboutAction()
     {
-        return $this->render('CloudyCrudBundle:Page:about.html.twig');
+		return $this->render('CloudyCrudBundle:Page:about.html.twig');
     }
 	
 	public function contactAction()
@@ -32,7 +40,7 @@ class PageController extends Controller
 		$request = $this->getRequest();
 		if ($request->getMethod() == 'POST') {
 			$form->bind($request);
-
+			
 			if ($form->isValid()) {
 				 $message = \Swift_Message::newInstance()
 					->setSubject('Contact enquiry from cloudyblog')
@@ -41,28 +49,21 @@ class PageController extends Controller
 					->setBody($this->renderView('CloudyCrudBundle:Page:contactEmail.txt.twig', array('enquiry' => $enquiry)));
 				$this->get('mailer')->send($message);
 				
-				$dispatcher = $this->get('event_dispatcher');
+				$data = $enquiry->getName();
 				
-				$someDataObject = "trzy";
-				$beforeEvent = new SubmitEvent($someDataObject);
-				$dispatcher->dispatch('pp.awesome_work.before', $beforeEvent);
 				
-				$afterEvent = new SubmitEvent($someDataObject);
-				$dispatcher->dispatch('pp.awesome_work.after', $afterEvent);
-				
-				//$event = new SubmitEvent();
-				//$dispatcher->dispatch(CloudyEvents::SUBMIT_EVENT, $event);
-				
-				//$this->get('session')->getFlashBag()->add('blogger-notice','Your contact enquiry was successfully sent. Thank you!');
+				$this->get('session')->getFlashBag()->add('blogger-notice', $data . ', Your contact enquiry was successfully sent. Thank you!');		
 
-				// Redirect - This is important to prevent users re-posting
-				// the form if they refresh the page
 				return $this->redirect($this->generateUrl('CloudyCrudBundle_contact'));
 			}
 		}
+		$data = "lala";
+		$dispatcher = new EventDispatcher();
+		$listener = new TestListener();
+		$dispatcher->addListener('foo.action', array($listener, 'onFooAction'));
+		$event = new SubmitEvent($data);
+		$dispatcher->dispatch('foo.action', $event);
 		
-		
-
 		return $this->render('CloudyCrudBundle:Page:contact.html.twig', array(
 			'form' => $form->createView()
 		));

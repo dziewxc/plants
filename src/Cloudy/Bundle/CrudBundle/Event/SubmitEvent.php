@@ -6,15 +6,15 @@ use Symfony\Component\EventDispatcher\Event;
 
 class SubmitEvent extends Event
 {
-	protected $data;
+	public $name;
 	
-	public function __construct ()
+	public function __construct ($data)
     {
-        echo "udalo sie";
+        $this->name = $data;
     }
 	
 	public function getData()
     {
-        return $this->data;
+        return $this->name;
     }
 }
