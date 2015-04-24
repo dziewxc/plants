@@ -24,7 +24,19 @@ class PageController extends Controller
 	
     public function indexAction()
     {
-        return $this->render('CloudyCrudBundle:Page:index.html.twig');
+        $em = $this->getDoctrine()
+                   ->getEntityManager();
+
+        $blogs = $em->createQueryBuilder()
+                    ->select('b')
+                    ->from('CloudyCrudBundle:Blog',  'b')
+                    ->addOrderBy('b.created', 'DESC')
+                    ->getQuery()
+                    ->getResult();
+
+        return $this->render('CloudyCrudBundle:Page:index.html.twig', array(
+            'blogs' => $blogs
+        ));
     }
 
 	public function aboutAction()
@@ -99,18 +111,4 @@ class PageController extends Controller
 			'form' =>$form->createView() //'variable_name' => variable_value
 		));*/
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
