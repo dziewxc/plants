@@ -4,6 +4,7 @@
 namespace Cloudy\Bundle\CrudBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Cloudy\Bundle\CrudBundle\Entity\Repository\BlogRepository")
@@ -44,6 +45,9 @@ class Blog
      */
     protected $tags;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="blog")
+     */
     protected $comments;
 
     /**
@@ -58,6 +62,8 @@ class Blog
 
 	public function __construct()
 		{
+			$this->comments = new ArrayCollection();
+			
 			$this->setCreated(new \DateTime());
 			$this->setUpdated(new \DateTime());
 		}
@@ -243,5 +249,39 @@ class Blog
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \Cloudy\Bundle\CrudBundle\Entity\Comment $comment
+     *
+     * @return Blog
+     */
+    public function addComment(\Cloudy\Bundle\CrudBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \Cloudy\Bundle\CrudBundle\Entity\Comment $comment
+     */
+    public function removeComment(\Cloudy\Bundle\CrudBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

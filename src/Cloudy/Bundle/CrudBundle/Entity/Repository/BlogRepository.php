@@ -14,7 +14,7 @@ class BlogRepository extends \Doctrine\ORM\EntityRepository
 	public function getLatestBlogs($limit = null)
     {
         $qb = $this->createQueryBuilder('b')
-                   ->select('b')
+                   ->select('b')  //we don't need 'from' coz we are in repository associated with Blog entity
                    ->addOrderBy('b.created', 'DESC');
 
         if (false === is_null($limit))

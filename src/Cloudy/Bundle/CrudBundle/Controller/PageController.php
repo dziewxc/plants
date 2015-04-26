@@ -14,25 +14,14 @@ use Cloudy\Bundle\CrudBundle\Event\SubmitEvent;
 use Cloudy\Bundle\CrudBundle\EventListener\TestListener;
 
 class PageController extends Controller
-{
-	public $name;
-	
-	public function setName($name) 
-	{
-		$this->name = $name;
-	}
-	
+{	
     public function indexAction()
     {
         $em = $this->getDoctrine()
                    ->getEntityManager();
 
-        $blogs = $em->createQueryBuilder()
-                    ->select('b')
-                    ->from('CloudyCrudBundle:Blog',  'b')
-                    ->addOrderBy('b.created', 'DESC')
-                    ->getQuery()
-                    ->getResult();
+        $blogs = $em->getRepository('CloudyCrudBundle:Blog')
+                    ->getLatestBlogs();
 
         return $this->render('CloudyCrudBundle:Page:index.html.twig', array(
             'blogs' => $blogs
