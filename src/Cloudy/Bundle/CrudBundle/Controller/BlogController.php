@@ -16,9 +16,13 @@ class BlogController extends Controller
         if (!$blog) {
             throw $this->createNotFoundException('Cześć, niestety nie posiadamy takiego wpisu');
         }
+		
+		$comments = $em->getRepository('CloudyCrudBundle:Comment')
+					   ->getCommentsForBlog($blog->getId());
 
         return $this->render('CloudyCrudBundle:Blog:show.html.twig', array(
             'blog'      => $blog,
+			'comments'  => $comments,
         ));
     }
 
