@@ -15,10 +15,11 @@ class BlogRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder('b')
                    ->select('b')  //we don't need 'from' coz we are in repository associated with Blog entity
+                   ->leftJoin('b.comments', 'c')
                    ->addOrderBy('b.created', 'DESC');
 
         if (false === is_null($limit))
-            $qb->setMaxResults($limit);
+				$qb->setMaxResults($limit);
 
         return $qb->getQuery()
                   ->getResult();
