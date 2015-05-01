@@ -72,32 +72,6 @@ class PageController extends Controller
 	
 	public function plantsCalculatorAction(Request $request)
 	{
-		$userdata = new UserData();
 		
-		$form = $this->createFormBuilder($userdata)
-			->add('flatSurface', 'integer')
-			->add('electronicsLevel', 'integer')
-			->add('next', 'submit', array('label' => 'next', 'validation_groups' => 'false'))
-			->add('occupantsCount', 'integer')
-			->add('ifSmokers', 'choice')
-			->add('save', 'submit', array('label' => 'save'))
-			->getForm();
-			
-		$form->handleRequest($request);
-		
-		if($form->isValid())
-		{
-			$nextAction = $form->get('save')->isClicked()
-				? 'task'
-				: 'nottask';
-			
-			return $this->redirectToRoute('CloudyCrudBundle_plantscalculator');
-		}
-		
-		
-		
-		/*return $this->render('CloudyCrudBundle:Page:plantscalculator.html.twig', array(
-			'form' =>$form->createView() //'variable_name' => variable_value
-		));*/
 	}
 }

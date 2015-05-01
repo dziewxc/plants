@@ -250,4 +250,43 @@ class Blog
     {
         return $this->updated;
     }
+
+    /**
+     * Add comment
+     *
+     * @param \Cloudy\Bundle\CrudBundle\Entity\Comment $comment
+     *
+     * @return Blog
+     */
+    public function addComment(\Cloudy\Bundle\CrudBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \Cloudy\Bundle\CrudBundle\Entity\Comment $comment
+     */
+    public function removeComment(\Cloudy\Bundle\CrudBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+	
+	public function __toString()
+{
+    return $this->getTitle();
+}
 }

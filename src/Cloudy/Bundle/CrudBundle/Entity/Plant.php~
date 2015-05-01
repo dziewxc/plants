@@ -1,0 +1,39 @@
+<?php
+namespace Cloudy\Bundle\CrudBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+
+/**
+*@ORM\Entity
+*@ORM\Table(name="plants")
+*/
+class Plant
+{
+    /**
+    *@ORM\Id
+    *@ORM\Column(type="integer")
+    */
+    protected $id;
+    /**
+    *@ORM\Column(name="location", type="string")
+    */
+    protected $location;
+    /**
+    *@ORM\Column(name="flat_surface", type="integer")
+    */
+    protected $flatSurface;
+    /**
+    *@ORM\Column(name="residents_count", type="integer")
+    */
+    protected $residentsCount;
+    /**
+    *@ORM\Column(type="datetime", name="posted_at")
+    */
+    protected $postedAt;
+    protected $user;
+}
+
+
+
+
