@@ -33,6 +33,10 @@ class Plant
     protected $postedAt;
     protected $user;
     /**
+    *@ORM\Column(name="if_gas_stove", type="boolean")
+    */
+    protected $ifGasStove;
+    /**
     *@ORM\Column(name="electronics_amount", type="integer")
     */
     protected $electronicsAmount;
@@ -159,5 +163,77 @@ class Plant
     public function getPostedAt()
     {
         return $this->postedAt;
+    }
+
+    /**
+     * Set ifGasStove
+     *
+     * @param boolean $ifGasStove
+     *
+     * @return Plant
+     */
+    public function setIfGasStove($ifGasStove)
+    {
+        $this->ifGasStove = $ifGasStove;
+
+        return $this;
+    }
+
+    /**
+     * Get ifGasStove
+     *
+     * @return boolean
+     */
+    public function getIfGasStove()
+    {
+        return $this->ifGasStove;
+    }
+
+    /**
+     * Set electronicsAmount
+     *
+     * @param integer $electronicsAmount
+     *
+     * @return Plant
+     */
+    public function setElectronicsAmount($electronicsAmount)
+    {
+        $this->electronicsAmount = $electronicsAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get electronicsAmount
+     *
+     * @return integer
+     */
+    public function getElectronicsAmount()
+    {
+        return $this->electronicsAmount;
+    }
+
+    /**
+     * Set ifGarage
+     *
+     * @param boolean $ifGarage
+     *
+     * @return Plant
+     */
+    public function setIfGarage($ifGarage)
+    {
+        $this->ifGarage = $ifGarage;
+
+        return $this;
+    }
+
+    /**
+     * Get ifGarage
+     *
+     * @return boolean
+     */
+    public function getIfGarage()
+    {
+        return $this->ifGarage;
     }
 }

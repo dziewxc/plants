@@ -30,7 +30,23 @@ class PageController extends Controller
 
 	public function aboutAction()
     {
-		return $this->render('CloudyCrudBundle:Page:about.html.twig');
+        $defaults = array(
+            'duration' => '12:17:26',
+        );
+
+        $formBuilder = $this->get('form.factory')->createBuilder('form', $defaults);
+        $formBuilder->add('text', 'textarea', array('required' => false));
+        $formBuilder->add('duration', 'time', array('with_seconds' => true, 'input' => 'string'));
+        $form = $formBuilder->getForm();
+        
+        $request = $this->getRequest();
+		if ($request->getMethod() == 'POST')
+			$form->bind($request);
+
+        $form->handleRequest($request);
+		return $this->render('CloudyCrudBundle:Page:about.html.twig', array(
+			'form' => $form->createView()
+		));
     }
 	
 	public function contactAction()
