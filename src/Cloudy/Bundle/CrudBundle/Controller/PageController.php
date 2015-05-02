@@ -5,6 +5,7 @@ namespace Cloudy\Bundle\CrudBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Cloudy\Bundle\CrudBundle\Entity\Enquiry;
+use Cloudy\Bundle\CrudBundle\Entity\EntityRepository\BlogRepository;
 use Cloudy\Bundle\CrudBundle\Entity\UserData;
 use Cloudy\Bundle\CrudBundle\Form\EnquiryType;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,6 +38,17 @@ class PageController extends Controller
         $formBuilder = $this->get('form.factory')->createBuilder('form', $defaults);
         $formBuilder->add('text', 'textarea', array('required' => false));
         $formBuilder->add('duration', 'time', array('with_seconds' => true, 'input' => 'string'));
+        $formBuilder->add('blog', 'entity', array(  //szuka metody __toString i z niej pobiera co ma wyświetlać
+            'class' => 'Cloudy\Bundle\CrudBundle\Entity\Blog',
+            'query_builder' => function($BlogRepository)
+            {
+                return $BlogRepository->createQueryBuilder('b')
+                          ->select('b')  
+                          ->leftJoin('b.comments', 'c')
+                          ->addOrderBy('b.created', 'DESC')
+                          ->setMaxResults(3);
+            }
+        ));
         $form = $formBuilder->getForm();
         
         $request = $this->getRequest();
