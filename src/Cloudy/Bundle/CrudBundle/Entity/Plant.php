@@ -7,12 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
 *@ORM\Entity
 *@ORM\Table(name="plants")
+*@ORM\HasLifecycleCallbacks
 */
 class Plant
 {
     /**
     *@ORM\Id
     *@ORM\Column(type="integer")
+    * @ORM\GeneratedValue(strategy="AUTO")
     */
     protected $id;
     /**
@@ -31,6 +33,10 @@ class Plant
     *@ORM\Column(type="datetime", name="posted_at")
     */
     protected $postedAt;
+    /**
+    *@ORM\Column(type="datetime", name="udpated_at")
+    */
+    protected $updatedAt;
     protected $user;
     /**
     *@ORM\Column(name="if_gas_stove", type="boolean")
@@ -44,21 +50,12 @@ class Plant
     *@ORM\Column(name="if_garage", type="boolean")
     */
     protected $ifGarage;
-
-    /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return Plant
-     */
-    public function setId($id)
+    
+    public function __construct()
     {
-        $this->id = $id;
-
-        return $this;
+        $this->setPostedAt(new \DateTime());
+        $this->setUpdatedAt(new \DateTime());
     }
-
     /**
      * Get id
      *
@@ -235,5 +232,36 @@ class Plant
     public function getIfGarage()
     {
         return $this->ifGarage;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return Plant
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+    /**
+    *@ORM\PreUpdate
+    */
+    public function setUpdatedValue()
+    {
+        $this->setUpdatedAt(new \DateTime());
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }
