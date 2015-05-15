@@ -13,6 +13,10 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Cloudy\Bundle\CrudBundle\CloudyEvents;
 use Cloudy\Bundle\CrudBundle\Event\SubmitEvent;
 use Cloudy\Bundle\CrudBundle\EventListener\TestListener;
+use PHPImageWorkshop\ImageWorkshop;
+use Symfony\Component\Asset\Package;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
+use Symfony\Component\DomCrawler\Crawler;
 
 class PageController extends Controller
 {	
@@ -38,6 +42,12 @@ class PageController extends Controller
         $formBuilder = $this->get('form.factory')->createBuilder('form', $defaults);
         $formBuilder->add('text', 'textarea', array('required' => false));
         $formBuilder->add('duration', 'time', array('with_seconds' => true, 'input' => 'string'));
+        $formBuilder->add('gender', 'choice', array(
+            'choices' => array(
+                'm' => 'men', 
+                'f' => 'fem'
+                ),
+        ));
         $formBuilder->add('blog', 'entity', array(  //szuka metody __toString i z niej pobiera co ma wyświetlać
             'class' => 'Cloudy\Bundle\CrudBundle\Entity\Blog',
             'query_builder' => function($BlogRepository)
@@ -100,6 +110,22 @@ class PageController extends Controller
 	
 	public function plantsCalculatorAction(Request $request)
 	{
-		
+		//$package = new Package(new EmptyVersionStrategy());
+        //echo $package->getUrl('/image.png');
+        $html = file_get_contents('http://cloudymind.pl/eksperyment-z-lustrem/');
+        $crawler = new Crawler($html);
+
+        foreach ($crawler as $domElement) {
+            print $domElement->nodeName;
+        }
+        
+        $crawler = $crawler->filterXPath('descendant-or-self::body/p');
+        
+        return $this->render('CloudyCrudBundle:Page:plantscalculator.html.twig');
 	}
+    
+    public function domAction()
+    {
+        return $this->render('CloudyCrudBundle:Page:dom.html.twig');
+    }
 }

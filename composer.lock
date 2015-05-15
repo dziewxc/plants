@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6b1e4aceb1333619e280129d65dd4773",
+    "hash": "23017315b95eaec9a14daccd453cb113",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1499,6 +1499,59 @@
             "time": "2015-03-14 06:06:39"
         },
         {
+            "name": "symfony/asset",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/asset.git",
+                "reference": "a5c77d33fe6a9213954a21e52eb170bfcea50ec1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/asset/zipball/a5c77d33fe6a9213954a21e52eb170bfcea50ec1",
+                "reference": "a5c77d33fe6a9213954a21e52eb170bfcea50ec1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/http-foundation": "~2.8|~3.0",
+                "symfony/phpunit-bridge": "~2.8|~3.0"
+            },
+            "suggest": {
+                "symfony/http-foundation": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Asset\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony Asset Component",
+            "homepage": "http://symfony.com",
+            "time": "2015-04-10 07:31:54"
+        },
+        {
             "name": "symfony/assetic-bundle",
             "version": "v2.6.1",
             "source": {
@@ -1962,7 +2015,8 @@
         "doctrine/doctrine-migrations-bundle": 20,
         "doctrine/migrations": 20,
         "doctrine/doctrine-fixtures-bundle": 20,
-        "doctrine/data-fixtures": 20
+        "doctrine/data-fixtures": 20,
+        "symfony/asset": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

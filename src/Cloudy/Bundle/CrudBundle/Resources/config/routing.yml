@@ -23,6 +23,12 @@ CloudyCrudBundle_plantscalculator:
     requirements:
         _method:  GET|POST
 
+CloudyCrudBundle_dom:
+    pattern:  /dom
+    defaults: { _controller: CloudyCrudBundle:Page:dom }
+    requirements:
+        _method:  GET|POST
+        
 CloudyCrudBundle_blog_show:
     pattern:  /{id}
     defaults: { _controller: CloudyCrudBundle:Blog:show }
