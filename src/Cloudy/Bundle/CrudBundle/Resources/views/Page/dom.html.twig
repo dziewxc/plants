@@ -1,15 +1,29 @@
 {# src/Cloudy/Bundle/CrudBundle/Resources/views/Page/dom.html.twig #}
 {% extends 'CloudyCrudBundle::layout.html.twig' %}
 
-{% block title %}DOMYml{% endblock%}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/cloudy/public/css/products.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block title %}Dom XML{% endblock %}
 
 {% block body %}
     <header>
-        <h1>Yo, yo, I'm analyzing your domxml</h1>
+        <h1>Yo, yo, I'm analyzing your dom xml</h1>
     </header>
     <article>
         <p>
-        Hello
+        {% for product in products %}
+            <div class="product">
+                <div class="ptitle"><p>  {{ product.title }}  </p></div>
+                <p>
+                <div class="product_discount">  {{ product.discount }}  </div>
+                <div class="product_price">  {{ product.current_price }}  </div>
+                </p>
+                <p id="oldprice"> Stara cena: <div class="product_old_price">{{ product.old_price }} </div> </p>
+            </div>
+        {% endfor %}
 		</p>
     </article>
 {% endblock %}

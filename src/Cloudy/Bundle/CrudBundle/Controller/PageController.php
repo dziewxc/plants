@@ -126,6 +126,85 @@ class PageController extends Controller
     
     public function domAction()
     {
-        return $this->render('CloudyCrudBundle:Page:dom.html.twig');
+        $domain = 'http://bgbstudio.com';
+        $playersCategory = 'proizvodi/blu-ray-plejeri';
+        $targetPage = $domain . '/' . $playersCategory;
+         
+        $dom = new \DOMDocument();
+         
+        @$dom->loadHTMLFile($targetPage);
+        $productsInfo = [];
+        
+        $container = $dom->getElementById('lista-proizvoda-na-akciji');
+        $divs = $container->getElementsByTagName('div');
+        foreach($divs as $div)
+        {
+            if($div->getAttribute('class') === 'product-block-content')
+            {
+                $info = array();
+                $productWrapper = $div;
+                $discount = $productWrapper->getElementsByTagName('div')->item(0);
+                
+                $info['discount'] = $discount && $discount->getAttribute('class') == 'badge-sale'
+                    ? $discount->nodeValue
+                    : 0
+                ;
+                $link = $productWrapper->getElementsByTagName('a')->item(0);
+                $info['url'] = $domain . $link->getAttribute('href');
+                
+                $info['title'] = $productWrapper
+                    ->getElementsByTagName('h2')
+                    ->item(0)
+                    ->getElementsByTagName('a')
+                    ->item(0)    //błąd
+                    ->nodeValue
+                ;
+                
+                $currentPrice = $productWrapper
+                    ->getElementsByTagName('p')
+                    ->item(1);
+                    
+                $info['current_price'] = $currentPrice && $currentPrice->getAttribute('class') === 'product-block-price' 
+                    ? $currentPrice->nodeValue
+                    : 'N/A'
+                ;
+                
+                $oldPrice = $productWrapper
+                    ->getElementsByTagName('p')
+                    ->item(2)
+                ;
+                
+                $info['old_price'] = $oldPrice && $oldPrice->getAttribute('class') === 'product-block-price-old'
+                    ? $oldPrice->nodeValue
+                    : 'N/A'
+                ;
+                
+                $productsInfo[] = $info;
+            }
+        }
+        
+        /*
+        echo "<pre>";
+        print_r($productsInfo);
+        echo "</pre>";
+        */
+        
+        //cloudyDOM
+        /*
+        $cloudy = 'http://cloudymind.pl/';
+        $mirrorExperimentArticle = 'eksperyment-z-lustrem';
+        $cloudyTargetPage = $cloudy . '/' . $mirrorExperimentArticle;
+        
+        $cloudyDom = new DOMDocument();
+        $cloudyDom->loadHTMLFile($cloudyTargetPage);
+        $cloudyInfo = array();
+        */
+        
+        return $this->render('CloudyCrudBundle:Page:dom.html.twig', array(
+            'products' => $productsInfo));
     }
 }
+
+
+
+
