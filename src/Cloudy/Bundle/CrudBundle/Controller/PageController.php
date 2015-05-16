@@ -19,6 +19,19 @@ use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\CssSelector\CssSelector;
 
+class DOMSelector  extends \DOMXPath
+{
+    /**
+     * @param string $selector
+     * @param \DOMNode|null $contextNode
+     * @return \DOMNodeList
+     */
+    public function queryCss($selector, $contextNode = null)
+    {
+        return $this->query(CssSelector::toXPath($selector), $contextNode);
+    }
+}
+
 class PageController extends Controller
 {	
     public function indexAction()
@@ -230,10 +243,56 @@ class PageController extends Controller
     
     public function cssSelectorAction()
     {
-        echo CssSelector::toXPath('p.product-block-price');
-        return $this->render('CloudyCrudBundle:Page:cssselector.html.twig', array());
+        $domain = 'http://bgbstudio.com';
+        $playersCategory = 'proizvodi/blu-ray-plejeri';
+        $targetPage = $domain . '/' . $playersCategory;
+        
+        $dom = new \DOMDocument();
+        @$dom->loadHTMLFile($targetPage);
+        
+        $productsInfo = array();
+        $domSelector = new DOMSelector($dom);
+        $productWrappers = $domSelector->queryCss('.product-block-content');
+        
+        foreach($productWrappers as $wrapper)
+        {
+            $info = array();
+            
+            $discount = $domSelector->queryCss('.badge-sale', $wrapper)->item(0);   //nawet jeśli jest jeden na liście, muszę go zaznaczyć
+            $info['discount'] = $discount ? $discount->nodeValue : 0;
+            
+            $link = $domSelector->queryCss('a', $wrapper)->item(0);
+            $info['url'] = $domain . $link->getAttribute('href');
+            
+            $title = $domSelector->queryCss('h2 a', $wrapper)->item(0);
+            $info['title'] = $title ? $title->nodeValue : 'N/A';
+            
+            $price = $domSelector->queryCss('.product-block-price', $wrapper)->item(0);
+            $info['current_price'] = $price ? $price->nodeValue : 'N/A';
+            
+            $oldprice = $domSelector->queryCss('.product-block-price-old', $wrapper)->item(0);
+            $info['old_price'] = $oldprice ? $oldprice->nodeValue : 'N/A';
+            
+            $productsInfo[] = $info;
+        }
+        
+        return $this->render('CloudyCrudBundle:Page:cssselector.html.twig', array(
+            'products' => $productsInfo
+            )
+        );
+        
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
