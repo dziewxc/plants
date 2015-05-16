@@ -14,6 +14,7 @@
     </header>
     <article>
         <p>
+        <div class="productblock">
         {% for product in products %}
             <div class="product">
                 <div class="ptitle"><p>  {{ product.title }}  </p></div>
@@ -24,6 +25,21 @@
                 <p id="oldprice"> Stara cena: <div class="product_old_price">{{ product.old_price }} </div> </p>
             </div>
         {% endfor %}
+        </div>
+		</p>
+        <p>
+        <div class="productblock">
+        {% for product in products2 %}
+            <div class="product2">
+                <div class="ptitle2"><p>  {{ product.title }}  </p></div>
+                <p>
+                <div class="product_discount2">  {{ product.discount }}  </div>
+                <div class="product_price2">  {{ product.current_price }}  </div>
+                </p>
+                <p id="oldprice2"> Stara cena: <div class="product_old_price2">{{ product.old_price }} </div> </p>
+            </div>
+        {% endfor %}
+        </div>
 		</p>
     </article>
 {% endblock %}

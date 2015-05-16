@@ -133,7 +133,7 @@ class PageController extends Controller
          
         $dom = new \DOMDocument();
          
-        @$dom->loadHTMLFile($targetPage);
+        @$dom->loadHTMLFile($targetPage);  //jest blad z naglowkiem w html'u, wygluszamy go na razie
         $productsInfo = [];
         
         $container = $dom->getElementById('lista-proizvoda-na-akciji');
@@ -184,27 +184,50 @@ class PageController extends Controller
             }
         }
         
-        /*
-        echo "<pre>";
-        print_r($productsInfo);
-        echo "</pre>";
-        */
+        //XPath queries
         
-        //cloudyDOM
-        /*
-        $cloudy = 'http://cloudymind.pl/';
-        $mirrorExperimentArticle = 'eksperyment-z-lustrem';
-        $cloudyTargetPage = $cloudy . '/' . $mirrorExperimentArticle;
+        $dom2 = new \DOMDocument();
+        @$dom2->loadHTMLFile($targetPage);
         
-        $cloudyDom = new DOMDocument();
-        $cloudyDom->loadHTMLFile($cloudyTargetPage);
-        $cloudyInfo = array();
-        */
+        $xpath = new \DOMXPath($dom2);
         
+        $linkXPath = 'descendant-or-self::a';  //query
+        $nodeList = $xpath->query($linkXPath);
+        
+        $productWrapperXPath = "descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' product-block-content ')]";
+        $productWrappersList = $xpath->query($productWrapperXPath);
+        
+        foreach($productWrappersList as $wrapper)
+        {
+            $info = array();
+            
+            $discountXPath = "descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' badge-sale ')]";
+            $discount = $xpath->query($discountXPath, $wrapper)->item(0);
+            $info['discount'] = $discount ? $discount->nodeValue : 0;
+            
+            $linkXPath = 'descendant-or-self::a';
+            $link = $xpath->query($linkXPath, $wrapper)->item(0);
+            $info['url'] = $domain . $link->getAttribute('href');
+            
+            $titleXPath = 'descendant-or-self::h2/descendant-or-self::*/a';
+            $info['title'] = $xpath->query($titleXPath, $wrapper)->item(0)->nodeValue;
+
+            $currentPriceXPath = "descendant-or-self::p[@class and contains(concat(' ', normalize-space(@class), ' '), ' product-block-price ')]";
+            $currentPrice = $xpath->query($currentPriceXPath, $wrapper)->item(0);
+            $info['current_price'] = $currentPrice ? $currentPrice->nodeValue : 'N/A';
+         
+            $oldPriceXPath = "descendant-or-self::p[@class and contains(concat(' ', normalize-space(@class), ' '), ' product-block-price-old ')]";
+            $oldPrice = $xpath->query($oldPriceXPath, $wrapper)->item(0);
+            $info['old_price'] = $oldPrice ? $oldPrice->nodeValue : 'N/A';
+            
+            $productsInfo2[] = $info;
+        }
+
         return $this->render('CloudyCrudBundle:Page:dom.html.twig', array(
-     
-       'products' => $productsInfo));
+            'products' => $productsInfo,
+            'products2' => $productsInfo2));
     }
+    
     public function cssSelectorAction()
     {
         echo CssSelector::toXPath('p.product-block-price');
