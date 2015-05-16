@@ -17,6 +17,7 @@ use PHPImageWorkshop\ImageWorkshop;
 use Symfony\Component\Asset\Package;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\CssSelector\CssSelector;
 
 class PageController extends Controller
 {	
@@ -201,7 +202,13 @@ class PageController extends Controller
         */
         
         return $this->render('CloudyCrudBundle:Page:dom.html.twig', array(
-            'products' => $productsInfo));
+     
+       'products' => $productsInfo));
+    }
+    public function cssSelectorAction()
+    {
+        echo CssSelector::toXPath('p.product-block-price');
+        return $this->render('CloudyCrudBundle:Page:cssselector.html.twig', array());
     }
 }
 

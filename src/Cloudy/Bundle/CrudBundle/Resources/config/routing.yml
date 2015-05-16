@@ -29,6 +29,12 @@ CloudyCrudBundle_dom:
     requirements:
         _method:  GET|POST
         
+CloudyCrudBundle_cssselector:
+    pattern:  /cssselector
+    defaults: { _controller: CloudyCrudBundle:Page:cssSelector }
+    requirements:
+        _method:  GET|POST
+        
 CloudyCrudBundle_blog_show:
     pattern:  /{id}
     defaults: { _controller: CloudyCrudBundle:Blog:show }
