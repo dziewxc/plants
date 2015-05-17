@@ -18,6 +18,7 @@ use Symfony\Component\Asset\Package;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\CssSelector\CssSelector;
+use Goutte\Client;
 
 class DOMSelector  extends \DOMXPath
 {
@@ -281,6 +282,50 @@ class PageController extends Controller
             )
         );
         
+    }
+    
+    public function goutteAction()
+    {
+        $client = new Client();
+        $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_SSL_VERIFYHOST, FALSE);
+        $client->getClient()->setDefaultOption('config/curl/'.CURLOPT_SSL_VERIFYPEER, FALSE);
+        
+        $url = 'http://bgbstudio.com/proizvodi/blu-ray-plejeri';
+        $crawler = $client->request('GET', $url);                           //returns Symfony\Component\DomCrawler\Crawler object
+        $link = $crawler->selectLink('Denon DBT-1713UD')->link();
+        
+        $pageCrawler = $client->click($link);
+        
+        /*$pageCrawler->filter('h3')->each(function($node) {
+            print $node->text()."\n";
+        });*/
+        
+        $sympatiaUrl = 'http://sympatia.onet.pl/';
+        $sympatiaCrawler = $client->request('GET', $sympatiaUrl);
+        $form = $sympatiaCrawler->filter('.submitLogin')->form();
+
+        $sympatiaCrawler = $client->submit($form, array("login" => '', 'pass' => ''));
+        $crawler->filter('.flash-error')->each(function ($node) {
+            print $node->text()."\n";
+        });
+        
+        
+        /*$sympatiaCrawler->filter('h3')->each(function($node) {
+            print $node->text()."\n";
+        });*/
+        
+        $activityLink = $sympatiaCrawler->selectLink('Moja aktywność')->link();
+        $sympatiaCrawler = $client->click($activityLink);
+
+        $sympatiaCrawler->filter('.userTitle')->each(function($node) {
+            echo $node->text() . "<br>";
+        });
+
+        
+        
+        return $this->render('CloudyCrudBundle:Page:goutte.html.twig', array(
+            
+        ));
     }
 }
 
