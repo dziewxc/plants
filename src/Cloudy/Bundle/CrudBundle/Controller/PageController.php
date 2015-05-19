@@ -19,6 +19,7 @@ use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\CssSelector\CssSelector;
 use Goutte\Client;
+use Cloudy\Bundle\CrudBundle\Scraper\Scraper;
 
 class DOMSelector  extends \DOMXPath
 {
@@ -241,9 +242,14 @@ class PageController extends Controller
             'products' => $productsInfo,
             'products2' => $productsInfo2));
     }
-    
+   
     public function cssSelectorAction()
     {
+        $scraper = new Scraper();
+        $scraper->setDomain('http://adopcjebuldozkow.pl');
+        $scraper->setAdoptionListPage('kategoria/nasze-adopcje/');
+        $scraper->load();
+        
         $domain = 'http://bgbstudio.com';
         $playersCategory = 'proizvodi/blu-ray-plejeri';
         $targetPage = $domain . '/' . $playersCategory;
@@ -296,11 +302,11 @@ class PageController extends Controller
         
         $pageCrawler = $client->click($link);
         
-        /*$pageCrawler->filter('h3')->each(function($node) {
-            print $node->text()."\n";
-        });*/
+        $pageCrawler->filter('h3')->each(function($node) {
+            print $node->text()."</br>";
+        });
         
-        $sympatiaUrl = 'http://sympatia.onet.pl/';
+        /*$sympatiaUrl = 'http://sympatia.onet.pl/';
         $sympatiaCrawler = $client->request('GET', $sympatiaUrl);
         $form = $sympatiaCrawler->filter('.submitLogin')->form();
 
@@ -310,9 +316,9 @@ class PageController extends Controller
         });
         
         
-        /*$sympatiaCrawler->filter('h3')->each(function($node) {
+        $sympatiaCrawler->filter('h3')->each(function($node) {
             print $node->text()."\n";
-        });*/
+        });
         
         $activityLink = $sympatiaCrawler->selectLink('Moja aktywność')->link();
         $sympatiaCrawler = $client->click($activityLink);
@@ -320,8 +326,7 @@ class PageController extends Controller
         $sympatiaCrawler->filter('.userTitle')->each(function($node) {
             echo $node->text() . "<br>";
         });
-
-        
+        */
         
         return $this->render('CloudyCrudBundle:Page:goutte.html.twig', array(
             
