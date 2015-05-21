@@ -45,11 +45,11 @@ class Dog
     */
     protected $sex;
     /**
-    *@ORM\Column(type="longtext")
+    *@ORM\Column(type="text")
     */
     protected $description;
     /**
-    *@ORM\Column(type="datatime")
+    *@ORM\Column(type="datetime")
     */
     protected $created;
     
@@ -215,11 +215,11 @@ class Dog
     /**
      * Set description
      *
-     * @param \longtext $description
+     * @param \text $description
      *
      * @return Dog
      */
-    public function setDescription(\longtext $description)
+    public function setDescription(\text $description)
     {
         $this->description = $description;
 
@@ -229,7 +229,7 @@ class Dog
     /**
      * Get description
      *
-     * @return \longtext
+     * @return \text
      */
     public function getDescription()
     {
@@ -239,11 +239,11 @@ class Dog
     /**
      * Set created
      *
-     * @param \datatime $created
+     * @param \datetime $created
      *
      * @return Dog
      */
-    public function setCreated(\datatime $created)
+    public function setCreated(\DateTime  $created)
     {
         $this->created = $created;
 
@@ -253,7 +253,7 @@ class Dog
     /**
      * Get created
      *
-     * @return \datatime
+     * @return \datetime
      */
     public function getCreated()
     {
