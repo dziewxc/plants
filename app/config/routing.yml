@@ -1,3 +1,7 @@
+dog:
+    resource: "@DogBundle/Resources/config/routing.yml"
+    prefix:   /dogs/
+
 cloudy_crud:
     resource: "@CloudyCrudBundle/Resources/config/routing.yml"
     prefix:   /cloudy/

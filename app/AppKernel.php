@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
             new Cloudy\Bundle\CrudBundle\CloudyCrudBundle(),
 			new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Dogs\DogBundle\DogBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -1,0 +1,55 @@
+<?php
+//src Dogs/DogBundle/Entity/Dog.php
+
+namespace Dogs\DogBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+
+/**
+*@ORM\Entity(repositoryClass="Dogs\DogBundle\Entity\Repository\DogRepository")
+*@ORM\Table(name="dogs")
+*@ORM\HasLifeCycleCallbacks
+*/
+class Dog
+{
+    /**
+    *@ORM\Id
+    *@ORM\Column(type="integer")
+    *@ORM\GeneratedValue(strategy="AUTO")
+    */
+    protected $id;
+    /**
+    *@ORM\Column(type="string")
+    */
+    protected $name;
+    /**
+    *@ORM\Column(type="string", length=100)
+    */
+    protected $location;
+    /**
+    *@ORM\Column(type="string", length=50)
+    */
+    protected $breed;
+    /**
+    *@ORM\Column(type="integer")
+    */
+    protected $age;
+    /**
+    *@ORM\Column(type="boolean")
+    */
+    protected $sterilization;
+    /**
+    *@ORM\Column(type="string", length=10)
+    */
+    protected $sex;
+    /**
+    *@ORM\Column(type="longtext")
+    */
+    protected $description;
+    /**
+    *@ORM\Column(type="datatime")
+    */
+    protected $created;
+}
