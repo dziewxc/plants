@@ -245,11 +245,7 @@ class PageController extends Controller
    
     public function cssSelectorAction()
     {
-        $scraper = new Scraper();
-        $scraper->setDomain('http://adopcjebuldozkow.pl');
-        $scraper->setAdoptionListPage('kategoria/nasze-adopcje/');
-        $scraper->load();
-        
+
         $domain = 'http://bgbstudio.com';
         $playersCategory = 'proizvodi/blu-ray-plejeri';
         $targetPage = $domain . '/' . $playersCategory;
