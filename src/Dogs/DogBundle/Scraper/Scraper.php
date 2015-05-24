@@ -8,8 +8,7 @@ use Symfony\Component\CssSelector\CssSelector;
 
 class Scraper 
 {
-    static $domains = array();
-    
+    static $domains = array(); 
     private $adoptionListPage;
     private $host;
     private $dom;    
@@ -78,19 +77,69 @@ class Scraper
     
     private function jamnikiEadopcjeScrap()
     {
-        $dogWrapper = $this->queryCss('div[align]');
+        $dogWrapper = $this->queryCss('div[align]', $contextNode = null, $this->dom);
         
-        foreach($dogWrapper as $dog)
-        {
-            $ahref = $this->queryCss('a', $dog)->item(0);
+        foreach($dogWrapper as $dog)  //dla każdej ramki z psem na stronie z adopcjami...
+        {   
+            $ahref = $this->queryCss('a', $dog, $this->dom)->item(0);  //zaznacz link prowadzący do profilu psa
             $link = $ahref ? $ahref->getAttribute('href') : false;
+
+            $file = file_get_contents('http://' . $this->host . '/' . $link);
+
+            $file = mb_convert_encoding($file, 'utf-8', mb_detect_encoding($file));   //tysiące obejść, by móc ładować pliki z kodowaniem utf8
+            $file = mb_convert_encoding($file, 'html-entities', 'utf-8'); 
             
-            echo $link;
-            @$this->dom->loadHTMLFile($this->host . '/' . $link);
-            $td = $this->queryCss('td[style]')->item(1)->nodeValue;
+            $newdom = new \DOMDocument();
+            @$newdom->loadHTML($file);
+
+            $frame = $this->queryCss('td[style]', $contextNode = null, $dom = $newdom)->item(1)->nodeValue;
             
-            //$name = $this->queryCss('b', $td)->item();
-            echo $td . "</br>";
+            //jakas petla tutaj?
+            $regex = '/Imię: (.*)Płeć/';
+            preg_match($regex, $frame, $match);
+            $this->results['name'] = $match[1];
+            
+            $regex = '/Płeć: (.*)Wiek/';
+            preg_match($regex, $frame, $match);
+            switch($match[1])
+            {
+                case 'piesek' :
+                    $sex = 'pies';
+                    break;
+                case 'suczka' :
+                    $sex = 'suka';
+                    break;
+                default : 
+                    $sex = $match[1];
+            }
+            $this->results['sex'] = $sex;
+            
+            $regex = '/Wiek: (.*)Miasto/';
+            preg_match($regex, $frame, $match);
+            $this->results['age'] = $match[1];
+            
+            $regex = '/Województwo: (.*)Status/';
+            preg_match($regex, $frame, $match1);
+            $regex = '/Miasto: (.*)Województwo/';
+            preg_match($regex, $frame, $match);
+            $this->results['location'] = $match[1] . ', ' . $match1[1];
+            
+            $this->results['breed'] = 'jamnik';
+            
+            $sterilizationFrame = $this->queryCss('td[colspan]', $contextNode = null, $dom = $newdom)->item(3)->nodeValue;
+            $regex = '/Sterylizacja\\/Kastracja: (.*)/';
+            preg_match($regex, $sterilizationFrame, $match);
+            $this->results['sterilization'] = $match[1];
+            
+            $descriptionFrame = $this->queryCss('td[colspan]', $contextNode = null, $dom = $newdom)->item(2)->nodeValue; //trzeba usunac EOL
+            $regex = '/Charakter: (.*)/s';
+            preg_match($regex, strip_tags($descriptionFrame), $match);
+            $description = preg_replace('/([\r\n\t])/',' ',$match[1]);
+            $this->results['description'] = $description;
+            
+            echo "<pre>";
+            print_r($this->results);
+            echo "</pre>";
         }
     }
     
@@ -99,9 +148,9 @@ class Scraper
         //ciało
     }
     
-    private function queryCss($selector, $contextNode = null)
+    private function queryCss($selector, $contextNode = null, $dom)  //jak tutaj wpisać $dom = $this->dom ?
     {
-        $domScraper = new \DOMXPath($this->dom);
+        $domScraper = new \DOMXPath($dom);
         return $domScraper->query(CssSelector::toXPath($selector), $contextNode);
     }
 

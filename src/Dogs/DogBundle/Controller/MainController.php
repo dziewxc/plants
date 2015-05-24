@@ -15,6 +15,7 @@ class MainController extends Controller
         
         $scraper2 = new Scraper();
         echo "<pre>";
+
         print_r($scraper->getRegisteredPages());
         print_r($scraper2->getRegisteredPages());
         echo "</pre>";
