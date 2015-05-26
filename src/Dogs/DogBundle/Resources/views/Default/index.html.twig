@@ -1,1 +1,27 @@
 {# src/Dogd/DogBundle/Resources/views/index.html.twig #}
+
+{% block stylesheets %}
+    <link href="{{ asset('bundles/dogs/public/css/main.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block body %}
+<div class="wrapper">
+<div class="content">
+    <header>
+        <h1>Lista jamników do adopcji</h1>
+    </header>
+    <div class="doglist">
+    {% for jamnik in jamniki %}
+        <div class="dog">
+            <div id="name"><a href="{{ jamnik.link }}">{{ jamnik.name }}</a></div>
+            <div id="age"><div class="label">Wiek: </div> {{ jamnik.age }}</div>
+            <div id="location"><div class="label">Miejsce: </div> {{ jamnik.location }}</div>
+            <div id="breed"><div class="label">Rasa: </div> {{ jamnik.breed }}</div>
+            <div id="sex"><div class="label">Płeć: </div> {{ jamnik.sex }}</div>
+            <div id="sterilization"><div class="label">Sterylizacja: </div> {{ jamnik.sterilization }}</div>
+            <div id="description"><div class="label">Opis: </div> {{ jamnik.description }}</div>
+        </div>
+    {% endfor %}
+    </div>
+</div>    
+</div>
+{% endblock %}

@@ -13,16 +13,9 @@ class MainController extends Controller
         $scraper->registerPage('krakow.eadopcje', 'http://krakow.eadopcje.org');
         $scraper->registerPage('jamniki.eadopcje', 'http://jamniki.eadopcje.org/do_adopcji');
         
-        $scraper2 = new Scraper();
-        echo "<pre>";
-
-        print_r($scraper->getRegisteredPages());
-        print_r($scraper2->getRegisteredPages());
-        echo "</pre>";
-
-        $scraper->scrap('jamniki.eadopcje');
+        $jamniki = $scraper->scrap('jamniki.eadopcje');
         
-        
-        return $this->render('DogBundle:Default:index.html.twig', array());
+        return $this->render('DogBundle:Default:index.html.twig', array(
+            'jamniki'=> $jamniki));
     }
 }

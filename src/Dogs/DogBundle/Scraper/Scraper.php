@@ -57,6 +57,7 @@ class Scraper
         {
             echo "Nie ma takiej etykiety";
         }
+        return $this->results;
     }
     
     public function load($pageLabel)
@@ -94,10 +95,12 @@ class Scraper
 
             $frame = $this->queryCss('td[style]', $contextNode = null, $dom = $newdom)->item(1)->nodeValue;
             
+            $doginfo['link'] = 'http://' . $this->host . '/' . $link;
+            
             //jakas petla tutaj?
             $regex = '/Imię: (.*)Płeć/';
             preg_match($regex, $frame, $match);
-            $this->results['name'] = $match[1];
+            $doginfo['name'] = $match[1];
             
             $regex = '/Płeć: (.*)Wiek/';
             preg_match($regex, $frame, $match);
@@ -112,34 +115,32 @@ class Scraper
                 default : 
                     $sex = $match[1];
             }
-            $this->results['sex'] = $sex;
+            $doginfo['sex'] = $sex;
             
             $regex = '/Wiek: (.*)Miasto/';
             preg_match($regex, $frame, $match);
-            $this->results['age'] = $match[1];
+            $doginfo['age'] = $match[1];
             
             $regex = '/Województwo: (.*)Status/';
             preg_match($regex, $frame, $match1);
             $regex = '/Miasto: (.*)Województwo/';
             preg_match($regex, $frame, $match);
-            $this->results['location'] = $match[1] . ', ' . $match1[1];
+            $doginfo['location'] = $match[1] . ', ' . $match1[1];
             
-            $this->results['breed'] = 'jamnik';
+            $doginfo['breed'] = 'jamnik';
             
             $sterilizationFrame = $this->queryCss('td[colspan]', $contextNode = null, $dom = $newdom)->item(3)->nodeValue;
             $regex = '/Sterylizacja\\/Kastracja: (.*)/';
             preg_match($regex, $sterilizationFrame, $match);
-            $this->results['sterilization'] = $match[1];
+            $doginfo['sterilization'] = $match[1];
             
             $descriptionFrame = $this->queryCss('td[colspan]', $contextNode = null, $dom = $newdom)->item(2)->nodeValue; //trzeba usunac EOL
             $regex = '/Charakter: (.*)/s';
             preg_match($regex, strip_tags($descriptionFrame), $match);
             $description = preg_replace('/([\r\n\t])/',' ',$match[1]);
-            $this->results['description'] = $description;
+            $doginfo['description'] = $description;
             
-            echo "<pre>";
-            print_r($this->results);
-            echo "</pre>";
+            $this->results[] = $doginfo;
         }
     }
     
@@ -147,6 +148,7 @@ class Scraper
     {
         //ciało
     }
+
     
     private function queryCss($selector, $contextNode = null, $dom)  //jak tutaj wpisać $dom = $this->dom ?
     {
