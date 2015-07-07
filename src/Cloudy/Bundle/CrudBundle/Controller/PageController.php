@@ -137,6 +137,8 @@ class PageController extends Controller
         
         $crawler = $crawler->filterXPath('descendant-or-self::body/p');
         
+        
+        
         return $this->render('CloudyCrudBundle:Page:plantscalculator.html.twig');
 	}
     

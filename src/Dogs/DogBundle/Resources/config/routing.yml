@@ -1,3 +1,7 @@
 dog_homepage:
     path:     /
     defaults: { _controller: DogBundle:Main:index }
+
+dog_new:
+    path:     /news
+    defaults: { _controller: DogBundle:Main:new }
