@@ -1,6 +1,7 @@
 <?php
-
 namespace Dogs\DogBundle\Entity\Repository;
+
+use Doctrine\ORM\EntityRepository;
 
 /**
  * DogRepository
@@ -10,4 +11,24 @@ namespace Dogs\DogBundle\Entity\Repository;
  */
 class DogRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getListOfDogs()
+    {
+        $query = $this->createQueryBuilder('d')
+                      ->select('d')
+                      ->addOrderBy('d.created');
+                      
+        return $query->getQuery()
+                     ->getResult();
+    }
+    
+    public function getListOfDogsFromYesterday($time)
+    {
+        $query = $this->createQueryBuilder('y')
+                      ->select('y')
+                      ->where('y.created = :time')
+                      ->setParameter('time', $time);
+                      
+        return $query->getQuery()
+                     ->getResult();
+    }
 }

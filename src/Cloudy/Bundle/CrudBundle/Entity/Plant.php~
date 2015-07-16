@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
 *@ORM\Entity
 *@ORM\Table(name="plants")
+*@ORM\HasLifecycleCallbacks
 */
 class Plant
 {
@@ -50,6 +51,11 @@ class Plant
     */
     protected $ifGarage;
     
+    public function __construct()
+    {
+        $this->setPostedAt(new \DateTime());
+        $this->setUpdatedAt(new \DateTime());
+    }
     /**
      * Get id
      *
@@ -226,5 +232,36 @@ class Plant
     public function getIfGarage()
     {
         return $this->ifGarage;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return Plant
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+    /**
+    *@ORM\PreUpdate
+    */
+    public function setUpdatedValue()
+    {
+        $this->setUpdatedAt(new \DateTime());
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }

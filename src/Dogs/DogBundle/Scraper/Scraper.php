@@ -9,11 +9,13 @@ use Goutte\Client;
 
 class Scraper 
 {
-    static $domains = array(); 
+    private static $domains = array(); 
     private $adoptionListPage;  //adres strony
     private $host;  //adres strony głównej
-    private $dom;   
+    private $dom;
     private $results = array();
+    private $jamnikiBreakNumber = 0;
+    private $psyBreakNumber = 0;
     
     public function registerPage($pageLabel, $pageUrl)
     {
@@ -64,34 +66,62 @@ class Scraper
         $this->host = parse_url(self::$domains[$pageLabel])['host'];
         $this->dom = new \DOMDocument();
         @$this->dom->loadHTMLFile($this->getPageByLabel($pageLabel));
+        $this->results = array();
         
         switch($pageLabel)
         {
             case 'jamniki.eadopcje':
                 $this->jamnikiEadopcjeScrap();
+                if($this->jamnikiBreakNumber === 0)
+                {
+                    $currentSite = self::$domains[$pageLabel];
+                    $regex = "/http:\\/\\/jamniki.eadopcje.org\\/do_adopcji\\/polska\\/psiaki\\/wszystkie\\/(.*?)/";
+                    preg_match($regex, $currentSite, $match);
+                    $newSufix = $match[1] + 10;
+                    $newSite = "http://jamniki.eadopcje.org/do_adopcji/polska/psiaki/wszystkie/" . $newSufix;
+                    self::$domains[$pageLabel] = $newSite;
+                    $this->dom = new \DOMDocument();
+                    @$this->dom->loadHTMLFile($this->getPageByLabel($pageLabel));
+                    $this->jamnikiEadopcjeScrap();
+                }
                 break;
             case 'krakow.eadopcje':
                 $this->krakowEadopcjeScrap();
                 break;
             case 'psy':
                 $this->psyScrap();
+                if($this->psyBreakNumber === 0) //psyTodayCount jest bez sensu
+                {
+                    $currentSite = self::$domains[$pageLabel];
+                    $regex = "/http:\\/\\/www.psy.pl\\/adopcje\\/page(.*?).html/";
+                    preg_match($regex, $currentSite, $match);
+                    $newNumber = $match[1] + 1;
+                    $newSite = "http://www.psy.pl/adopcje/page" . $newNumber . ".html";
+                    self::$domains[$pageLabel] = $newSite;
+                    $this->dom = new \DOMDocument();
+                    @$this->dom->loadHTMLFile($this->getPageByLabel($pageLabel));
+                    $this->psyScrap();
+                }
+
                 break;
         }
     }
     
     private function jamnikiEadopcjeScrap()
     {
-        $this->results = array();
+        
         $dogWrapper = $this->queryCss('div[align]', $contextNode = null, $this->dom);
         
-        foreach($dogWrapper as $dog)  //dla każdej ramki z psem na stronie z adopcjami...
+        foreach($dogWrapper as $dog)
         {
-            $ahref = $this->queryCss('a', $dog, $this->dom)->item(0);  //zaznacz link prowadzący do profilu psa
+            //pobierz adres kobnkretnego psa i załaduj stronę z nim
+            $ahref = $this->queryCss('a', $dog, $this->dom)->item(0);
             $link = $ahref ? $ahref->getAttribute('href') : false;
-
+            
             $file = file_get_contents('http://' . $this->host . '/' . $link);
 
-            $file = mb_convert_encoding($file, 'utf-8', mb_detect_encoding($file));   //tysiące obejść, by móc ładować pliki z kodowaniem utf8
+            //ustaw kodowanie
+            $file = mb_convert_encoding($file, 'utf-8', mb_detect_encoding($file));
             $file = mb_convert_encoding($file, 'html-entities', 'utf-8'); 
             
             $newdom = new \DOMDocument();
@@ -99,12 +129,38 @@ class Scraper
 
             $frame = $this->queryCss('td[style]', $contextNode = null, $dom = $newdom)->item(1)->nodeValue;
             
-            $doginfo['link'] = 'http://' . $this->host . '/' . $link;
+            //date
+            $date = $this->queryCss('td[colspan]', $contextNode = null, $dom = $newdom)->item(0)->nodeValue;
+            $year = date('Y');
+            $regex = "/, (.*?){$year}/";
+            preg_match($regex, $date, $match);
+            $date = $match[1] . $year;
+            $today = date('d.m.Y');
+            $todayCount = 0;
+            if($today === $date)
+            {
+                $todayCount++;
+                continue;
+            }
+            $yesterday = date('d.m.Y', time() - 60 * 60 * 24);
+            if(!($yesterday === $date))
+            {
+                $this->jamnikiBreakNumber = 1;
+                break;
+            }
             
-            //jakas petla tutaj?
+            //url
+            
+            $doginfo['url'] = 'http://' . $this->host . '/' . $link;
+            
+            //name
             $regex = '/Imię: (.*)Płeć/';
             preg_match($regex, $frame, $match);
-            $doginfo['name'] = $match[1];
+            $doginfo['name'] = $match[1] ? $match[1] : "N/A";
+            
+            //title
+            
+            $doginfo['title'] = $doginfo['name'];
             
             // sex
             
@@ -170,7 +226,9 @@ class Scraper
 
             $regex = '/Województwo: (.*)Status/';
             preg_match($regex, $frame, $match);
-            $doginfo['location'] = $match[1];
+            $doginfo['location'] = $match[1] ? $match[1] : "N/A";
+            
+            //breed
             
             $doginfo['breed'] = 'jamnik';
             
@@ -188,13 +246,34 @@ class Scraper
                 $doginfo['sterilization'] = "N/A";
             }
             
+            //image
+            $imgContext = $this->queryCss('#psiak img', $contextNode = null, $dom = $newdom)->item(0)->getAttribute('src');
+            $imgUrl = 'http://www.' . $this->host . ltrim($imgContext, '.');
+            
+            //do tego przydałaby się inna metoda/klasa
+            //http://forums.phpfreaks.com/topic/286562-script-to-scrape-images/
+
+            if(!filter_var($imgUrl, FILTER_VALIDATE_URL) === FALSE)
+            {
+                $name = basename($imgUrl);
+                file_put_contents("{$name}", file_get_contents($imgUrl));
+            }
+            
             //description
             
-            $descriptionFrame = $this->queryCss('td[colspan]', $contextNode = null, $dom = $newdom)->item(2)->nodeValue; //trzeba usunac EOL
+            $descriptionFrame = $this->queryCss('td[colspan]', $contextNode = null, $dom = $newdom)->item(2)->nodeValue;
             $regex = '/Charakter: (.*)/s';
             preg_match($regex, strip_tags($descriptionFrame), $match);
-            $description = preg_replace('/([\r\n\t])/',' ',$match[1]);
-            $doginfo['description'] = $description ? $description : "Brak opisu";
+            if(isset($match[1]))
+            {
+                $description = preg_replace('/([\r\n\t])/',' ',$match[1]);
+            }
+            if(isset($description) && strlen($description) < 3000)
+            {
+                $doginfo['description'] = $description;
+            } else {
+                $doginfo['description'] = "Brak opisu";
+            }
             
             $this->results[] = $doginfo;
         }
@@ -205,32 +284,15 @@ class Scraper
         //body
     }
     
-    private function psyScrap() //ma tytul zamiast imienia 
-    //sterylizacja nie dziala, nie mozna brac rzeczy z list4a p i udawać, że wszystko w porządku
-    //dlaczego tu nie ma opisu!?
+    private function psyScrap()
     {
-        $this->results = array();
         $tableContent = $this->queryCss('tbody', null, $this->dom)->item(0);
         $dogWrapper = $this->queryCss('tr', $tableContent, $this->dom);
-        
+        $this->psyTodayCount = 0;
+                    
         foreach($dogWrapper as $dog)
         {
-            $created = $this->queryCss(".date", $dog, $this->dom)->item(0);
-            $doginfo['created'] = $created ? $created->nodeValue : '0';
-            
-            $location = $this->queryCss("td", $dog, $this->dom)->item(2);
-            
-            $string = htmlentities($location->nodeValue, null, 'utf-8');
-            $string = str_replace("&nbsp;", "", $string);
-
-            if($location && (strlen($string) > 0))
-            {
-                $doginfo['location'] = $location->nodeValue;
-            } else 
-            {
-                $doginfo['location'] = 'N/A';
-            }
-            
+            $doginfo = array();
             $title = $this->queryCss('c-red', $dog, $this->dom)->item(0);
             $doginfo['title'] = $title ? $title->nodeValue : "N/A";
 
@@ -245,10 +307,22 @@ class Scraper
             $newdom = new \DOMDocument();
             @$newdom->loadHTML($file);
             
-
+            //date
+            $date = $this->queryCss('.date.c-lBrown', null, $newdom)->item(0)->nodeValue;
+            $time = date('d-m-Y', time() - 60 * 60 * 24);
+            $today = date('d-m-Y');
+            if($today === $date)
+            {
+                continue;
+            }
+            if(!($time === $date))
+            {
+                $this->psyBreakNumber = 1;
+                break;
+            }
             $doginfo['name'] = 'N/A';
             
-            $doginfo['link'] = 'http://' . $this->host . '/' . $link;
+            $doginfo['url'] = 'http://' . $this->host . '/' . $link;
             
             //sex
             
@@ -261,32 +335,73 @@ class Scraper
             {
                 $doginfo['sex'] = "N/A";
             }
+            
+            //age
 
             $doginfo['age'] = 'N/A';
             
-            $description = $this->queryCss('.kernel distinction m_0_0_20_0', null, $newdom)->item(0);
-            $doginfo['description'] = $description ? $description->nodeValue : 'Brak opisu';
+            //location
+            
+            $location = $this->queryCss('.list4', null, $newdom)->item(0)->nodeValue;
+            $nextElementList = array('Telefon', 'Tel.', 'Adres');
+            
+            foreach($nextElementList as $nextElement)
+            {
+                $regex = "/Województwo: (.*) {$nextElement}/";
+                preg_match($regex, preg_replace('/\s+/', ' ',$location), $match);
+                if(isset($match[1]) && !isset($doginfo['location']))
+                {
+                    $doginfo['location'] = $match[1];
+                }
+            }
+            if(!isset($match[1]))
+            {
+                $doginfo['location'] = "N/A";
+            }
+            //description
+            
+            $description = $this->queryCss('.kernel.distinction.m_0_0_20_0', null, $newdom)->item(0)->nodeValue;
+            if(isset($description) && strlen($description) < 3000)
+            {
+                $description = preg_replace('/\s+/', ' ', $description);
+                $doginfo['description'] = $description;
+            } else {
+                $doginfo['description'] = "N/A";
+            }
+            
+            //breed
 
             $breed = $this->queryCss('.list4a p', null, $newdom)->item(1);
             $doginfo['breed'] = $breed ? $breed->nodeValue : 'N/A';
             
-            $sterilization = $this->queryCss('.list4 p', null, $newdom)->item(1)->nodeValue;
+            //sterilization
+            
+            $sterilization = $this->queryCss('.list4', null, $newdom)->item(0)->nodeValue;
+            $nextElementList = array('Data', 'Kontakt');
             $sterilizationValue = array("Tak", "Nie");
-            if(in_array($sterilization, $sterilizationValue))
+            foreach($nextElementList as $nextElement)
             {
-                $doginfo['sterilization'] = $sterilization;
-            } else
+                $regex = "/sterylizowana (.*) {$nextElement}/";
+                preg_match($regex, preg_replace('/\s+/', ' ',$sterilization), $match);
+                if(isset($match[1]) && !isset($doginfo['sterilization']) && in_array($match[1], $sterilizationValue))
+                {
+                    $doginfo['sterilization'] = $match[1];
+                }
+            }
+            if(!isset($match[1]))
             {
                 $doginfo['sterilization'] = "N/A";
             }
-            //$doginfo['name'] = $match[1];
             
+            //title
             
             $title = $this->queryCss('.medium', null, $newdom)->item(0);
             $doginfo['title'] = $title ? $title->nodeValue : 'N/A';
 
-            $size = $this->queryCss('.list4 p', null, $newdom)->item(0);
-            $doginfo['size'] = $size ? $size->nodeValue : 'N/A';
+            //size
+            
+            //$size = $this->queryCss('.list4 p', null, $newdom)->item(0);
+            //$doginfo['size'] = $size ? $size->nodeValue : 'N/A';
 
             $this->results[] = $doginfo;
         }

@@ -10,9 +10,21 @@
         <h1>Lista jamników do adopcji</h1>
     </header>
     <div class="doglist">
+    {% for dog in dogs %}
+    <div class="dog">
+            <div id="title"><a href="{{ dog.url }}">>>{{ dog.title }}<<</a></div>
+            <div id="age"><div class="label">Wiek: </div> {{ dog.age }}</div>
+            <div id="location"><div class="label">Miejsce: </div> {{ dog.location }}</div>
+            <div id="breed"><div class="label">Rasa: </div> {{ dog.breed }}</div>
+            <div id="sex"><div class="label">Płeć: </div> {{ dog.sex }}</div>
+            <div id="sterilization"><div class="label">Sterylizacja: </div> {{ dog.sterilization }}</div>
+            <div id="description"><div class="label">Opis: </div> {{ dog.description }}</div>
+        </div>
+    {% endfor %}
+   {#
     {% for jamnik in jamniki %}
         <div class="dog">
-            <div id="name"><a href="{{ jamnik.link }}">>>{{ jamnik.name }}<<</a></div>
+            <div id="title"><a href="{{ jamnik.url }}">>>{{ jamnik.title }}<<</a></div>
             <div id="age"><div class="label">Wiek: </div> {{ jamnik.age }}</div>
             <div id="location"><div class="label">Miejsce: </div> {{ jamnik.location }}</div>
             <div id="breed"><div class="label">Rasa: </div> {{ jamnik.breed }}</div>
@@ -23,7 +35,7 @@
     {% endfor %}
         {% for psy in psy %}
         <div class="dog">
-            <div id="name"><a href="{{ psy.link }}">>>{{ psy.title }}<<</a></div>
+            <div id="title"><a href="{{ psy.url }}">>>{{ psy.title }}<<</a></div>
             <div id="age"><div class="label">Wiek: </div> {{ psy.age }}</div>
             <div id="location"><div class="label">Miejsce: </div> {{ psy.location }}</div>
             <div id="breed"><div class="label">Rasa: </div> {{ psy.breed }}</div>
@@ -32,6 +44,7 @@
             <div id="description"><div class="label">Opis: </div> {{ psy.description }}</div>
         </div>
     {% endfor %}
+   #}
     </div>
 </div>    
 </div>

@@ -52,6 +52,14 @@ class Dog
     *@ORM\Column(type="datetime")
     */
     protected $created;
+    /**
+    *@ORM\Column(type="string", length=200)
+    */
+    protected $url;
+    /**
+    *@ORM\Column(type="string", length=100)
+    */
+    protected $title;
     
 	public function __construct()
 		{
@@ -258,5 +266,53 @@ class Dog
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     *
+     * @return Dog
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return Dog
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 }
