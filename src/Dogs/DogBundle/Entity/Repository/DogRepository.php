@@ -21,7 +21,7 @@ class DogRepository extends \Doctrine\ORM\EntityRepository
                      ->getResult();
     }
     
-    public function getListOfDogsFromYesterday($time)
+    public function getListOfDogsFromToday($time)
     {
         $query = $this->createQueryBuilder('y')
                       ->select('y')

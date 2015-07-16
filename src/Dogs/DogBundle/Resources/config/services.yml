@@ -1,4 +1,5 @@
 services:
     dog_scraper:
         class: Dogs\DogBundle\Service\DogScraper
-        arguments: [time]
+        arguments:
+            entityManager: "@doctrine.orm.dogs_entity_manager"

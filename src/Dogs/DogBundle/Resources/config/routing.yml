@@ -1,5 +1,5 @@
 dog_homepage:
-    path:     /
+    path:     /index
     defaults: { _controller: DogBundle:Main:index }
 
 dog_new:

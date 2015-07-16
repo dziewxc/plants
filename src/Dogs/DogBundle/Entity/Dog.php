@@ -227,7 +227,7 @@ class Dog
      *
      * @return Dog
      */
-    public function setDescription(\text $description)
+    public function setDescription($description)
     {
         $this->description = $description;
 

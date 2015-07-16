@@ -25,13 +25,14 @@ class MainController extends Controller
         $response->headers->addCacheControlDirective('no-cache', false);
         */
         $em = $this->getDoctrine()->getEntityManager('dogs');
-        $time = date('Y-m-d', time() - 60 * 60 * 24);
-        $dogsFromYesterday = $em->getRepository('DogBundle:Dog')->getListOfDogsFromYesterday($time);
-        if(!$dogsFromYesterday)
+        $time = date('Y-m-d');
+        $dogsFromToday = $em->getRepository('DogBundle:Dog')->getListOfDogsFromToday($time);
+        if(!$dogsFromToday)
         {
            $scraper = $this->get('dog_scraper');
-           $scraper->scrap($time);
+           $scraper->scrap($em);
         }
+        
 
         $dogs = $em->getRepository('DogBundle:Dog')->getListOfDogs();
         
