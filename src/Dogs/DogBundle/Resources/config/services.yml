@@ -3,3 +3,14 @@ services:
         class: Dogs\DogBundle\Service\DogScraper
         arguments:
             entityManager: "@doctrine.orm.dogs_entity_manager"
+
+    app.form.registration:
+        class: Dogs\DogBundle\Form\RegistrationType
+        tags:
+            - { name: form.type, alias: user_registration }
+            
+    app.form.handler.registration:
+        class: Dogs\DogBundle\Form\Handler\RegistrationFormHandler
+        arguments: ["@fos_user.registration.form", "@request", "@fos_user.user_manager", "@fos_user.mailer", "@fos_user.util.token_generator"]
+        scope: request
+        public: false

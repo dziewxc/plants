@@ -5,11 +5,14 @@ dog:
 cloudy_crud:
     resource: "@CloudyCrudBundle/Resources/config/routing.yml"
     prefix:   /cloudy/
+
+app:
+    resource: @AppBundle/Controller/
+    type:     annotation
     
-appbundle:
-    resource: "@AppBundle/Resources/config/routing.yml"
-    prefix:   /
-    
+apps:
+    path: /lol
+    defaults: { _controller: AppBundle:Default:lol }
     
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"

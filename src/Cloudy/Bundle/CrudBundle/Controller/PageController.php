@@ -91,7 +91,7 @@ class PageController extends Controller
 	{
 		$enquiry = new Enquiry();
 		$form = $this->createForm(new EnquiryType(), $enquiry);
-
+        
 		$request = $this->getRequest();
 		if ($request->getMethod() == 'POST') {
 			$form->bind($request);

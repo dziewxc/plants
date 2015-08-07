@@ -1,0 +1,7 @@
+apps:
+    path: /lol
+    defaults: { _controller: AppBundle:Default:lol }
+    
+app:
+    resource: @AppBundle/Controller/
+    type:     annotation

@@ -3,10 +3,11 @@ imports:
     - { resource: security.yml }
     - { resource: services.yml }
     - { resource: @CloudyCrudBundle/Resources/config/config.yml }
+    - { resource: @DogBundle/Resources/config/services.yml }
 
 framework:
     #esi:             ~
-    #translator:      { fallback: "%locale%" }
+    translator:      { fallback: "%locale%" }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -85,6 +86,7 @@ doctrine:
                 connection:       dogs
                 mappings:
                     DogBundle: ~
+                    FOSUserBundle: ~
         auto_generate_proxy_classes: "%kernel.debug%"
 
 # Swiftmailer Configuration
@@ -94,3 +96,14 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# FOS
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: Dogs\DogBundle\Entity\User
+    model_manager_name: dogs
+    registration:
+        form:
+            type: user_registration
+            handler: app.form.handler.registration

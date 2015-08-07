@@ -24,8 +24,10 @@ class MainController extends Controller
         $response->headers->addCacheControlDirective('must-revalidate', true);
         $response->headers->addCacheControlDirective('no-cache', false);
         */
+        ini_set('max_execution_time', 600);
         $em = $this->getDoctrine()->getEntityManager('dogs');
         $time = date('Y-m-d');
+        
         $dogsFromToday = $em->getRepository('DogBundle:Dog')->getListOfDogsFromToday($time);
         if(!$dogsFromToday)
         {
@@ -33,13 +35,12 @@ class MainController extends Controller
            $scraper->scrap($em);
         }
         
-
         $dogs = $em->getRepository('DogBundle:Dog')->getListOfDogs();
         
         if (!$dogs) {
             throw $this->createNotFoundException('Nie ma psów');
         }
-        
+       
         return $this->render('DogBundle:Default:index.html.twig', array(
             'dogs' => $dogs,
         ));
@@ -62,6 +63,22 @@ class MainController extends Controller
         ));
         $response->setContent($result);
         return $response;
-        
+
+    }
+    
+    public function mainAction()
+    {
+        $userManager = $this->get('fos_user.user_manager');
+        $user = $userManager->createUser();
+        $user->setUsername('John');
+        $user->setEmail('john.doe@example.com');
+
+        //$userManager->updateUser($user);
+        return $this->render('DogBundle:Default:header.html.twig', array());
+    }
+    
+    public function adminAction()
+    {
+        return new Response('Admin page!');
     }
 }

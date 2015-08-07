@@ -1,0 +1,67 @@
+{% block stylesheets %}
+    <link href="{{ asset('bundles/dogs/public/css/base.css') }}" type="text/css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Roboto:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:700' rel='stylesheet' type='text/css'>
+{% endblock %}
+<body>
+    <div class="header">
+        <div id="logo-box">
+            <a href=""><img src="{{ asset('bundles/dogs/public/images/logo.png') }}" alt="logo" style="width: 100%;"></a>
+            <div class="float"></div>
+            <div id="bone">
+                <img src="{{ asset('bundles/dogs/public/images/logobone.png') }}" alt="bone" style="margin: 5% 36% 0px 36%;">
+            </div>
+        </div>
+        <div id="social-box">
+            <img src="{{ asset('bundles/dogs/public/images/facebook.png') }}" alt="social" style="">
+            <img src="{{ asset('bundles/dogs/public/images/pinterest.png') }}" alt="social" style="">
+            <img src="{{ asset('bundles/dogs/public/images/twitter.png') }}" alt="social" style="">
+            <img src="{{ asset('bundles/dogs/public/images/google.png') }}" alt="social" style="">
+        <div class="float"></div>
+        <div id="search">
+            <p>Szukaj</p>
+            <img src="{{ asset('bundles/dogs/public/images/loupe.png') }}" alt="social" style="width: 15%; margin: 3%;">
+        </div>
+        
+        </div>
+        <div class="float"></div>
+        <div class="menu">
+            <ul>
+                <li><a href=""><p>Blog</p></a></li>
+                <li><a href=""><p>Adopcje</p></a></li>
+                <li><a href=""><p>O nas</p></a></li>
+                <li><a href=""><p>Kontakt</p></a></li>
+            </ul>
+        </div>
+        <div class="float"></div>
+        <div class="header-photo">
+            <img src="{{ asset('bundles/dogs/public/images/dogheader.jpg') }}" alt="social" style="">
+            <div class="header-text">Adoptuj<p>mnie!</p></div>
+        </div>
+        <div class="float"></div>
+        <div class="content">
+            <div id="content-title">SZUKAJ PSA:</div>
+            <div class="search-categories">
+                <ul>
+                    <li><p>Rasa</p><img src="{{ asset('bundles/dogs/public/images/arrow.png') }}" alt="navigation" style="position:relative;left:9px;top:5px;"></li>
+                    <li><p>Lokalizacja</p><img src="{{ asset('bundles/dogs/public/images/arrow.png') }}" alt="navigation" style="position:relative;left:9px;top:5px;"></li>
+                </ul>
+            </div>
+            <div class="float"></div>
+            <div class="sidebar">
+            <div id="info"></div>
+                <ul>
+                <li><p>Wesprzyj nas!</p></li>
+                <li><p>Nowe psy</p></li>
+                <li><p>Tekst</p></li>
+                <li><p>Informacje</p></li>
+                </ul>
+            </div>
+            <div class="dog-list">
+                
+            </div>
+            <div class="float"></div>
+        </div>
+        
+    </div>
+</body>

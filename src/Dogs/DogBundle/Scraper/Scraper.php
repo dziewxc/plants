@@ -289,7 +289,7 @@ class Scraper
         $tableContent = $this->queryCss('tbody', null, $this->dom)->item(0);
         $dogWrapper = $this->queryCss('tr', $tableContent, $this->dom);
         $this->psyTodayCount = 0;
-                    
+        
         foreach($dogWrapper as $dog)
         {
             $doginfo = array();

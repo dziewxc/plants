@@ -5,3 +5,15 @@ dog_homepage:
 dog_new:
     path:     /news
     defaults: { _controller: DogBundle:Main:new }
+    
+dog_main:
+    path:     /main
+    defaults: { _controller: DogBundle:Main:main }
+    
+dog_admin:
+    path:     /admin
+    defaults: { _controller: DogBundle:Main:admin }
+    
+dog_dog:
+    path:     /dog
+    defaults: { _controller: DogBundle:Dog:list }

@@ -107,6 +107,11 @@ class DefaultController extends Controller
 			'day' => 'nana'
 		));	
 	}
+    public function lolAction()
+    {
+        echo "dupa";
+        return Response();
+    }
 }
 
 

@@ -1,0 +1,27 @@
+{% extends 'DogBundle:Default:header.html.twig' %}
+
+{% block body %}
+<div class="count">
+    Wszystkie psy ({{ pagination.getTotalItemCount }})
+</div>
+<table>
+{# table body #}
+{% for article in pagination %}
+<tr class="dog-block">
+    <td>
+    <div class="dog-photo">
+        <img src="{{ asset('bundles/dogs/public/images/dogie.jpg') }}" alt="social" style="">
+    </div>
+    
+    {{ article.id }}
+    {{ article.title }}
+    <div class="float"></div>
+    </td>
+</tr>
+{% endfor %}
+</table>
+{# display navigation #}
+<div class="navigation">
+    {{ knp_pagination_render(pagination) }}
+</div>
+{% endblock %}

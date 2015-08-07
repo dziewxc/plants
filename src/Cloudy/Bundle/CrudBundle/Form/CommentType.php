@@ -1,5 +1,4 @@
 <?php
-
 namespace Cloudy\Bundle\CrudBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

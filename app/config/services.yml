@@ -19,3 +19,4 @@ services:
         class: Cloudy\Bundle\CrudBundle\Controller\PageController
         arguments:
             - @event_dispatcher
+            
