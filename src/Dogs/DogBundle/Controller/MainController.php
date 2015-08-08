@@ -3,10 +3,11 @@ namespace Dogs\DogBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 class MainController extends Controller
 {
-    public function indexAction() 
+    public function addAction() 
     {
         /*
         $response = new Response();
@@ -41,32 +42,29 @@ class MainController extends Controller
             throw $this->createNotFoundException('Nie ma psów');
         }
        
-        return $this->render('DogBundle:Default:index.html.twig', array(
+        return $this->render('DogBundle:Default:add.html.twig', array(
             'dogs' => $dogs,
         ));
         //$response->setContent($result);
         //return $response;
     }
     
-    public function newAction()
+    public function mainAction(Request $request)
     {
-        $response = new Response();
-        $response->setPublic();
-        $response->setMaxAge(120);
-        $response->setSharedMaxAge(120);
-        $response->headers->addCacheControlDirective('no-cache', false);
-        
-        $time2 = date('H:i');
-        
-        $result = $this->render('DogBundle:Default:new.html.twig', array(
-            'date'=> $time2,
-        ));
-        $response->setContent($result);
-        return $response;
+        $em    = $this->getDoctrine()->getEntityManager('dogs');
+        $query = $em->createQuery('SELECT d FROM DogBundle:Dog d');
 
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),
+            3
+        );
+
+        return $this->render('DogBundle:Dog:dog.html.twig', array('pagination' => $pagination));
     }
     
-    public function mainAction()
+    public function testAction()
     {
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->createUser();
@@ -74,11 +72,7 @@ class MainController extends Controller
         $user->setEmail('john.doe@example.com');
 
         //$userManager->updateUser($user);
+        
         return $this->render('DogBundle:Default:header.html.twig', array());
-    }
-    
-    public function adminAction()
-    {
-        return new Response('Admin page!');
     }
 }

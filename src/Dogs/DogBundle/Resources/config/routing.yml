@@ -1,19 +1,11 @@
-dog_homepage:
-    path:     /index
-    defaults: { _controller: DogBundle:Main:index }
-
-dog_new:
-    path:     /news
-    defaults: { _controller: DogBundle:Main:new }
+dog_add:
+    path:     /add
+    defaults: { _controller: DogBundle:Main:add }
     
 dog_main:
-    path:     /main
+    path:     /
     defaults: { _controller: DogBundle:Main:main }
     
-dog_admin:
-    path:     /admin
-    defaults: { _controller: DogBundle:Main:admin }
-    
-dog_dog:
-    path:     /dog
-    defaults: { _controller: DogBundle:Dog:list }
+dog_test:
+    path:     /test
+    defaults: { _controller: DogBundle:Main:test }

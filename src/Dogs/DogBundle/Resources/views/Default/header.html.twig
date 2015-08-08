@@ -1,9 +1,20 @@
 {% block stylesheets %}
     <link href="{{ asset('bundles/dogs/public/css/base.css') }}" type="text/css" rel="stylesheet" />
-    <link href='http://fonts.googleapis.com/css?family=Roboto:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Raleway:200' rel='stylesheet' type='text/css'>
 {% endblock %}
+<script type="text/javascript">
+<!--
+    function toggle_visibility(id) {
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+    }
+//-->
+</script>
 <body>
     <div class="header">
         <div id="logo-box">
@@ -53,7 +64,7 @@
             <div class="float"></div>
             <div class="sidebar">
             <div id="info"></div>
-                <ul>
+                <ul style="padding:0px">
                 <li><p>Wesprzyj nas!</p></li>
                 <li><p>Nowe psy</p></li>
                 <li><p>Tekst</p></li>
