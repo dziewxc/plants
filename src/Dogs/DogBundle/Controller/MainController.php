@@ -58,7 +58,7 @@ class MainController extends Controller
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1),
-            3
+            5
         );
 
         return $this->render('DogBundle:Dog:dog.html.twig', array('pagination' => $pagination));

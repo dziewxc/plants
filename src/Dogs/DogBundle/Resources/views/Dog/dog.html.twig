@@ -14,27 +14,28 @@
             <img src="{{ asset('bundles/dogs/public/images/dogie.jpg') }}" alt="social" style="">
         </div>
         <div class="dog-text">
-            <div class="dog-name">{{ dog.title }}</div>
+            <div class="dog-name"><a href={{ dog.url }} target="_blank">{{ dog.title }}</a></div>
             <div class="dog-age">{% if dog.age > 0 %} <p>Wiek:</p> {{ dog.age }} miesięcy{% endif %}</div>
             <div class="dog-breed"><p>Rasa:</p> {{ dog.breed }}</div>
             <div class="dog-location"><p>Województwo:</p> {{ dog.location }}</div>
+            <div class="dog-location"><p>Sterylizacja:</p> {{ dog.sterilization }}</div>
             
             <div class="description-panel">
             <button style="background:url({{ asset('bundles/dogs/public/images/button.png') }}) no-repeat" onclick="toggle_visibility({{ foo }});"></button>
-            <div class="description-label">Opis:</div>
+            <div class="description-label">Opis</div>
             </div>
             
             <div class="float"></div>
-            <div style='display:none' id={{ foo }}>{{ dog.description }}</div>
-        </div>
+         </div>   
+            <div style='display:none; padding: 10px 35px; margin: 20px; font-size:15px; color: #2B373E;' id={{ foo }}>{{ dog.description }}</div>
     <div class="float"></div>
     </td>
 </tr>
-{% set foo = 2 %}
+{% set foo = foo + 1 %}
 {% endfor %}
 </table>
 {# display navigation #}
 <div class="navigation">
-    {{ knp_pagination_render(pagination) }}
+{{ knp_pagination_render(pagination) }}
 </div>
 {% endblock %}
